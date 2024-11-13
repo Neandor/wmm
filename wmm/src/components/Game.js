@@ -106,93 +106,98 @@ const prizeAmounts = [
   
   const Game = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [score, setScore] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isCorrect, setIsCorrect] = useState(null);
     const [isBlinking, setIsBlinking] = useState(false);
     const [gameOver, setGameOver] = useState(false);
   
-
     const handleAnswerSelect = (answer) => {
-        const correctAnswer = questions[currentQuestionIndex].correct;
-        setSelectedAnswer(answer);
-        setIsCorrect(answer === correctAnswer);
-        setIsBlinking(true);
-    
-        if (answer === correctAnswer) {
-          setTimeout(() => {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setSelectedAnswer(null);
-            setIsCorrect(null);
-            setIsBlinking(false);
-          }, 3000); // Wait for 3 seconds before moving to the next question
-        } else {
-          setTimeout(() => {
-            setGameOver(true);
-            setIsBlinking(false);
-          }, 3000); // Wait for 3 seconds before ending the game
-        }
-      };
-    
-      if (gameOver || currentQuestionIndex >= questions.length) {
-        return (
-          <Container>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Game Over! You won: {prizeAmounts[currentQuestionIndex - 1]}
-            </Typography>
-          </Container>
-        );
-      }
-    const labels = ['A', 'B', 'C', 'D'];
+      const correctAnswer = questions[currentQuestionIndex].correct;
+      setSelectedAnswer(answer);
+      setIsCorrect(answer === correctAnswer);
+      setIsBlinking(true);
   
-
-    return (
+      if (answer === correctAnswer) {
+        setTimeout(() => {
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+          setSelectedAnswer(null);
+          setIsCorrect(null);
+          setIsBlinking(false);
+        }, 3000); // Wait for 3 seconds before moving to the next question
+      } else {
+        setTimeout(() => {
+          setGameOver(true);
+          setIsBlinking(false);
+        }, 3000); // Wait for 3 seconds before ending the game
+      }
+    };
+  
+    const handleStepClick = (index) => {
+      setCurrentQuestionIndex(index);
+      setSelectedAnswer(null);
+      setIsCorrect(null);
+      setIsBlinking(false);
+    };
+  
+    if (gameOver || currentQuestionIndex >= questions.length) {
+      return (
         <Container>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={4}>
-              <Stepper
-                orientation="vertical"
-                activeStep={currentQuestionIndex}
-                sx={{
-                  position: 'relative',
-                  left: '-350px', // Adjust this value as needed to move the stepper further left
-                  top: '10px',
-                  borderRadius: '8px', // Optional: Add rounded corners
-                }}
-              >
-                {prizeAmounts.map((amount, index) => (
-                  <Step key={amount} sx={{ margin: '0px', padding: '0px' }}>
-                    <StepLabel sx={{ margin: '0px', padding: '4px' }}>{amount}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-            </Grid>
-            <Grid item xs={12} md={8}>
-              <Box sx={{ position: 'relative', left: '-200px' }}>
-                <Box my={4} display="flex" justifyContent="center">
-                  <Question question={questions[currentQuestionIndex].question} />
-                </Box>
-                <Grid container spacing={2} justifyContent="center">
-                  {questions[currentQuestionIndex].answers.map((answer, index) => (
-                    <Grid item xs={12} sm={6} key={answer}>
-                      <Answer
-                        label={labels[index]}
-                        answer={answer}
-                        onSelect={handleAnswerSelect}
-                        isSelected={selectedAnswer === answer}
-                        isCorrect={isCorrect}
-                        correctAnswer={questions[currentQuestionIndex].correct}
-                        selectedAnswer={selectedAnswer}
-                        isBlinking={isBlinking} // Pass isBlinking as a prop
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            </Grid>
-          </Grid>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Game Over! You won: {prizeAmounts[currentQuestionIndex - 1]}
+          </Typography>
         </Container>
       );
-    };
-    
-    export default Game;
+    }
+  
+    const labels = ['A', 'B', 'C', 'D'];
+  
+    return (
+      <Container>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+            <Stepper
+              orientation="vertical"
+              activeStep={currentQuestionIndex}
+              sx={{
+                position: 'relative',
+                left: '-350px', // Adjust this value as needed to move the stepper further left
+                top: '10px',
+                borderRadius: '8px', // Optional: Add rounded corners
+              }}
+            >
+              {prizeAmounts.map((amount, index) => (
+                <Step key={amount} sx={{ margin: '0px', padding: '0px' }} onClick={() => handleStepClick(index)}>
+                  <StepLabel sx={{ margin: '0px', padding: '4px', cursor: 'pointer' }}>{amount}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <Box sx={{ position: 'relative', left: '-200px' }}>
+              <Box my={4} display="flex" justifyContent="center">
+                <Question question={questions[currentQuestionIndex].question} />
+              </Box>
+              <Grid container spacing={2} justifyContent="center">
+                {questions[currentQuestionIndex].answers.map((answer, index) => (
+                  <Grid item xs={12} sm={6} key={answer}>
+                    <Answer
+                      label={labels[index]}
+                      answer={answer}
+                      onSelect={handleAnswerSelect}
+                      isSelected={selectedAnswer === answer}
+                      isCorrect={isCorrect}
+                      correctAnswer={questions[currentQuestionIndex].correct}
+                      selectedAnswer={selectedAnswer}
+                      isBlinking={isBlinking} // Pass isBlinking as a prop
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    );
+  };
+  
+  export default Game;

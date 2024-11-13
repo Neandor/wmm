@@ -31,7 +31,7 @@ const Answer = ({ label, answer, onSelect, isSelected, isCorrect, correctAnswer,
         margin: '10px 0',
         animation: getAnimation(),
         fontSize: '1rem',
-        height: '60px', // Fixed height for all buttons
+        height: '80px', // Fixed height for all buttons
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
